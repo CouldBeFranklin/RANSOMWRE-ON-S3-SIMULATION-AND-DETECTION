@@ -76,6 +76,10 @@ Using AWS CloudShell, I executed a bash script that simulated activities commonl
 ![RANSOMWARE](RANSW/cli-sim1.jpg)
 
 
+### COMPROMISED S3
+
+
+![RANSOMWARE](RANSW/comp-s3.jpg)
 
 ---
 
@@ -102,6 +106,16 @@ I investigated the incident by analyzing CloudTrail and S3-related logs, correla
   - Which IAM user disabled it?
   - When was it disabled?
   - What API call was used?
+
+
+
+A ROUGH WORK SHOWING SOME OF THE ANSWERS DURING THE INVESTIGATION
+
+![RANSOMWARE](RANSW/rough1.jpg)
+
+![RANSOMWARE](RANSW/rough2.jpg)
+
+
 
 ---
 
@@ -132,7 +146,38 @@ Below are the queries used in this detection
 ![RANSOMWARE](RANSW/query5.jpg)
 
 
+### I also had to check if the company's TOP SECRET was tampered with
+
+![RANSOMWARE](RANSW/secret-query.jpg)
+
 ---
+
+## CloudWatch Metrics Analysis
+
+As part of the investigation, I used AWS CloudWatch to review Amazon S3 metrics that were enabled during the workshop setup. These metrics helped identify abnormal activity patterns consistent with ransomware behavior.
+
+### Key S3 Metrics Reviewed
+
+The following CloudWatch metrics were analyzed on the S3 dashboard:
+
+- **DeleteRequests (Sum)**  
+  This metric shows the total number of delete requests made against S3 objects over time. A sudden spike in delete requests can indicate malicious data destruction commonly seen during ransomware attacks.
+
+- **BytesDownloaded (Sum)**  
+  This metric represents the total number of bytes downloaded from S3. An unusual increase in downloaded bytes may indicate data exfiltration prior to or during a ransomware event.
+
+
+
+By correlating spikes in **DeleteRequests** and **BytesDownloaded** with CloudTrail logs, IAM activity, and timestamps, I was able to strengthen evidence of unauthorized activity. Together, these metrics provided additional confirmation of data deletion and exfiltration associated with the simulated ransomware incident.
+
+
+![RANSOMWARE](RANSW/bytes.jpg)
+
+![RANSOMWARE](RANSW/delete-sum.jpg)
+
+
+---
+
 
 ## Key Takeaways
 
@@ -159,4 +204,4 @@ This workshop strengthened my hands-on experience with **AWS cloud incident resp
 
 ---
 
-**Note:** The lab environment and simulation scripts were provided as part of the AWS CIRT workshop. This repository documents the investigation process and learning outcomes.
+**Note:** The lab environment and simulation scripts were provided as part of the AWS CIRT workshop. This repository of mine documents the investigation process and learning outcomes.
